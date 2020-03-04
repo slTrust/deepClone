@@ -3,10 +3,10 @@ function deepClone(source){
     if(source instanceof Object){
         let cacheDist = findCache(source)
         if(cacheDist){
-            console.log("有缓存")
+            // console.log("有缓存")
             return cacheDist;
         }else{
-            console.log("没缓存")
+            // console.log("没缓存")
             let dist;
             if(source instanceof Array){
                 dist = new Array();
@@ -14,7 +14,12 @@ function deepClone(source){
                 dist = function(){
                     return source.apply(this,arguments);
                 }
-            }else{
+            
+            } else if(source instanceof RegExp){
+                dist = new RegExp(source.source,source.flags);
+            } else if(source instanceof Date){
+                dist = new Date(source);
+            } else {
                 dist = new Object();
             }
             // 数据源 和 副本 都存入缓存 ，注意一定要 在 dist创建成功之后就把它 存入，防止重复的生成
