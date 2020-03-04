@@ -25,7 +25,9 @@ function deepClone(source){
             // 数据源 和 副本 都存入缓存 ，注意一定要 在 dist创建成功之后就把它 存入，防止重复的生成
             cache.push([source,dist])
             for(let key in source){
-                dist[key] = deepClone(source[key]);
+                if(source.hasOwnProperty(key)){
+                    dist[key] = deepClone(source[key]);
+                }
             }
             return dist;
         }

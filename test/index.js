@@ -119,7 +119,85 @@ describe('deepClone',()=>{
             assert(a.xxx !== a2.xxx);
         })
 
+        it("自动跳过原型属性",()=>{
+            const a = Object.create({name:"a"})
+            a.xxx = { yyy: { zzz: 1 } }
+            const a2 = deepClone(a);
+            assert(a !== a2);
+            assert.isFalse("name" in a2);
+            assert(a.xxx.yyy.zzz === a2.xxx.yyy.zzz);
+            assert(a.xxx.yyy !== a2.xxx.yyy);
+            assert(a.xxx !== a2.xxx);
+        })
 
+        it("很复杂的对象",()=>{
+            const a = {
+                n: NaN,
+                n2:Infinity,
+                s: '',
+                bool: false,
+                null: null,
+                u: undefined,
+                sym: Symbol(),
+                o: {
+                    n: NaN,
+                    n2:Infinity,
+                    s: '',
+                    bool: false,
+                    null: null,
+                    u: undefined,
+                    sym: Symbol()
+                },
+                array: [
+                    { 
+                        n: NaN,
+                        n2:Infinity,
+                        s: '',
+                        bool: false,
+                        null: null,
+                        u: undefined,
+                        sym: Symbol()
+                    }
+                ],
+                fn: function(){return "fn"},
+                date: new Date(),
+                reg: /test/gi,
+            }
+
+            const a2 = deepClone(a);
+            assert(a !== a2);
+            assert.isNaN(a2.n);
+            assert(a.n2 === a2.n2);
+            assert(a.s === a2.s);
+            assert(a.bool === a2.bool);
+            assert(a.null === a2.null);
+            assert(a.u === a2.u);
+            assert(a.sym === a2.sym);
+            assert(a.o !== a2.o);
+            assert.isNaN(a2.o.n);
+            assert(a.o.n2 === a2.o.n2);
+            assert(a.o.s === a2.o.s);
+            assert(a.o.bool === a2.o.bool);
+            assert(a.o.null === a2.o.null);
+            assert(a.o.u === a2.o.u);
+            assert(a.o.sym === a2.o.sym);
+            assert(a.array !== a2.array);
+            assert(a.array[0] !== a2.array[0]);
+            assert.isNaN(a2.array[0].n);
+            assert(a.array[0].n2 === a2.array[0].n2);
+            assert(a.array[0].s === a2.array[0].s);
+            assert(a.array[0].bool === a2.array[0].bool);
+            assert(a.array[0].null === a2.array[0].null);
+            assert(a.array[0].u === a2.array[0].u);
+            assert(a.array[0].sym === a2.array[0].sym);
+            assert(a.fn !== a2.fn);
+            assert(a.fn() === a2.fn());
+            assert(a.date !== a2.date);
+            assert(a.date.getTime() === a2.date.getTime());
+            assert(a.reg !== a2.reg);
+            assert(a.reg.source === a2.reg.source);
+            assert(a.reg.flags === a2.reg.flags);
+        })
 
     })
 
