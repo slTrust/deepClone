@@ -81,6 +81,23 @@ describe('deepClone',()=>{
 
         })
 
+        xit("不会爆栈",()=>{
+            const a = {child:null};
+            let b = a
+            for(let i=0;i<20000;i++){
+                b.child = {
+                    child:null
+                }
+                b = b.child
+            }
+            const a2 = deepClone(a);
+            assert(a !== a2);
+            assert(a.child !== a2.child);
+
+        })
+
+
+
     })
 
     
